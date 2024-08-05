@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model language {
+  lan_id            Int       @id @default(autoincrement())
+  lan_acronym       String    @unique
+  lan_description   String    @unique
+  lan_data_updated  DateTime  @updatedAt
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+  deleted_at        DateTime?
+  user user[]
+}
+
+model user {
+  user_id                     BigInt      @id @default(autoincrement())
+  lan_id                      Int
+  user_firebase_id            String?     @unique
+  user_full_name              String?
+  user_nick_name              String      @unique
+  user_state                  String?
+  user_last_seen              DateTime    
+  user_avatar                 String?
+  user_secret_key             String
+  user_type                   Int
+  user_membership             Boolean
+  user_personalized_state     String?
+  user_unblocked_option       String
+  user_device_token           String?
+  user_referred_code          String
+  user_rol                    String
+  user_refer_payment          Float       @default(0)
+  created_at                  DateTime    @default(now())
+  updated_at                  DateTime    @updatedAt
+  deleted_at                  DateTime?
+  remember_token              String?
+  user_data_updated           DateTime
+  lan                         language    @relation(fields: [lan_id], references: [lan_id])
+}
